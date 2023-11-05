@@ -9,7 +9,7 @@ module reg_file (clk, w_en, ra1, ra2, wa3, rd1, rd2, wd3);
   input wire clk, w_en;
   input wire [addr_width-1:0] ra1, ra2, wa3;
   input wire [word_width-1:0] wd3;
-  output wire [word_width-1:0] rd1, rd2;
+  output reg [word_width-1:0] rd1, rd2;
 
   reg [word_width-1:0] regs [nregs-1:0];
 

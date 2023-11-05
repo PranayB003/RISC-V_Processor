@@ -10,7 +10,7 @@ module stage_IF (clk, jmp_bch_en, jmp_bch_tgt, pc_en, stall_en, inst, pc_addr);
   output wire [word_width-1:0] inst;
   output wire [addr_width-1:0] pc_addr;
 
-  wire [addr_width-1:0] pc_addr, pc_addr_p4, next_pc_addr;
+  wire [addr_width-1:0] pc_addr_p4, next_pc_addr;
   wire [word_width-1:0] imem_out;
 
   // NOP Instruction (ADDI x0, x0, 0)
@@ -23,7 +23,7 @@ module stage_IF (clk, jmp_bch_en, jmp_bch_tgt, pc_en, stall_en, inst, pc_addr);
     .addr(pc_addr)
   );
 
-  instMem imem (
+  instMemory imem (
     .addr(pc_addr),
     .inst(imem_out)
   );
