@@ -1,6 +1,6 @@
 `include "constants.vh"
 
-module programCounter (clk, en, addr, addr_next);
+module programCounter (clk, en, addr_next, addr);
 
   parameter addr_width = `REG_ADDR_WIDTH;
 
