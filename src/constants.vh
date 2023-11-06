@@ -41,16 +41,6 @@
 `define FUNCT3_SH    3'b001
 `define FUNCT3_SW    3'b010
 
-`define FUNCT3_ADDI  3'b000
-`define FUNCT3_SLTI  3'b010
-`define FUNCT3_SLTIU 3'b011 
-`define FUNCT3_XORI  3'b100
-`define FUNCT3_ORI   3'b110
-`define FUNCT3_ANDI  3'b111
-`define FUNCT3_SLLI  3'b001
-`define FUNCT3_SRLI  3`b101
-`define FUNCT3_SRAI  3`b101
-
 `define ALU_ADD  4'b0000
 `define ALU_SUB  4'b0001
 `define ALU_SLT  4'b0010
