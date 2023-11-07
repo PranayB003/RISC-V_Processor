@@ -55,5 +55,3 @@
 `define ALU_NEQ  4'b1011
 `define ALU_GE   4'b1100
 `define ALU_GEU  4'b1101
-`define ALU_LT   4'b1110
-`define ALU_LTU  4'b1111

@@ -53,8 +53,8 @@ module controlUnit (opc, funct3, funct7,
         case (funct3)
           `FUNCT3_EQ : alu_ctl = `ALU_EQ;
           `FUNCT3_NEQ: alu_ctl = `ALU_NEQ;
-          `FUNCT3_LT : alu_ctl = `ALU_LT;
-          `FUNCT3_LTU: alu_ctl = `ALU_LTU;
+          `FUNCT3_LT : alu_ctl = `ALU_SLT;
+          `FUNCT3_LTU: alu_ctl = `ALU_SLTU;
           `FUNCT3_GE : alu_ctl = `ALU_GE;
           `FUNCT3_GEU: alu_ctl = `ALU_GEU;
         endcase

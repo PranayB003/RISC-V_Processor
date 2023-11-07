@@ -19,7 +19,7 @@ module extender (inst, imm_ext);
           `FUNCT3_SLL,
           `FUNCT3_SRL,
           `FUNCT3_SRA : imm_ext = { {27{1'b0}}, inst[24:20] };
-          default     : imm_ext = { {20{inst[31]}}, inst[31:20] };
+          default     : imm_ext = { {20{inst[31]}}, inst[31:20] }; // ADDI/SLTI[U]/ANDI/ORI/XORI
         endcase
       end
       `OPCODE_LUI,
@@ -29,7 +29,7 @@ module extender (inst, imm_ext);
       `OPCODE_BRANCH: imm_ext = { {20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0 };
       `OPCODE_LOAD  : imm_ext = { {20{inst[31]}}, inst[31:20] };
       `OPCODE_STORE : imm_ext = { {20{inst[31]}}, inst[31:25], inst[11:7] };
-      default       : imm_ext = 0;
+      default       : imm_ext = 0; // OPCODE_RTYPE, no Immediate required
     endcase
   end
 
