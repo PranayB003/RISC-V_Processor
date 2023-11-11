@@ -10,10 +10,11 @@ module dataMemory (clk, wen, type, addr, wd, rd);
   input wire [2:0] type;
   input wire [addr_width-1:0] addr;
   input wire [word_width-1:0] wd;
-  output wire [word_width-1:0] rd;
+  output reg [word_width-1:0] rd;
 
   reg [word_width-1:0] memory [mem_size-1:0];
 
+  // synchronous write
   always @(posedge clk)
   begin
     if (wen == 1'b1)
@@ -26,11 +27,17 @@ module dataMemory (clk, wen, type, addr, wd, rd);
     end
   end
 
-  assign rd = (type == `FUNCT3_LW) ? memory[addr] :
-              (type == `FUNCT3_LH) ? { {16{memory[addr][15]}}, memory[addr][15:0] } :
-              (type == `FUNCT3_LHU)? { {16{1'b0}}, memory[addr][15:0] } :
-              (type == `FUNCT3_LB) ? { {24{memory[addr][7]}}, memory[addr][7:0] } :
-              (type == `FUNCT3_LBU)? { {24{1'b0}}, memory[addr][7:0] } : 0;
-
+  // asynchronous read
+  always @(*)
+  begin
+    case (type)
+      `FUNCT3_LW  : rd = memory[addr];
+      `FUNCT3_LH  : rd = { {16{memory[addr][15]}}, memory[addr][15:0] };
+      `FUNCT3_LHU : rd = { {16{1'b0}}, memory[addr][15:0] };
+      `FUNCT3_LB  : rd = { {24{memory[addr][7]}}, memory[addr][7:0] };
+      `FUNCT3_LBU : rd = { {24{1'b0}}, memory[addr][7:0] };
+      default     : rd = 0;
+    endcase
+  end
 
 endmodule

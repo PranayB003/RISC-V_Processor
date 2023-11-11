@@ -3,9 +3,9 @@
 module stallingUnit (opc, stall_en, pc_en);
 
   input wire [6:0] opc;
-  output wire stall_en, pc_en;
+  output reg stall_en, pc_en;
   
-  reg nop_counter, pc_diable_counter;
+  reg nop_counter, pc_disable_counter;
 
   always @(*)
   begin
@@ -30,8 +30,11 @@ module stallingUnit (opc, stall_en, pc_en);
     endcase
   end
 
-  assign stall_en = (nop_counter != 0);
-  assign pc_en    = (pc_disable_counter != 0);
+  always @(*)
+  begin
+    stall_en = (nop_counter != 0);
+    pc_en    = (pc_disable_counter != 0);
+  end
 
 endmodule
 
