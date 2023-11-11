@@ -1,6 +1,6 @@
 `include "constants.vh"
 
-module reg_file (clk, w_en, ra1, ra2, wa3, rd1, rd2, wd3);
+module regfile (clk, w_en, ra1, ra2, wa3, rd1, rd2, wd3);
 
   parameter word_width = `WORD_WIDTH;
   parameter addr_width = `REG_ADDR_WIDTH;

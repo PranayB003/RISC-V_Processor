@@ -16,14 +16,14 @@ module stage_IF (clk, jmp_bch_en, jmp_bch_tgt, pc_en, stall_en, inst, pc_addr);
   // NOP Instruction (ADDI x0, x0, 0)
   reg NOP_inst = 32'b000000000000_00000_000_00000_0010011;
 
-  programCounter pc (
+  programCounter if_pc (
     .clk(clk),
     .en(pc_en),
     .addr_next(next_pc_addr),
     .addr(pc_addr)
   );
 
-  instMemory imem (
+  instMemory if_imem (
     .addr(pc_addr),
     .inst(imem_out)
   );
