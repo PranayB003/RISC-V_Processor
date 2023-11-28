@@ -3,7 +3,7 @@
 module stage_ID (clk, inst_in, pc_addr_in, rd_addr_in, rd_wen_in, wb_out, 
                  rs1, rs2, rs1_val, rs2_val, rd_addr_out,
                  mux_ctl, alu_ctl, jmp_ctl, rd_wen_out, wb_ctl, bch_ctl, mem_ctl, byt_typ,
-                 imm_ext, pc_addr_out, stall_en, pc_en);
+                 imm_ext, pc_addr_out, stall_en, pc_en, halt);
 
   parameter reg_addr_width = `REG_ADDR_WIDTH;
   parameter ins_addr_width = `MEM_ADDR_WIDTH;
@@ -19,7 +19,7 @@ module stage_ID (clk, inst_in, pc_addr_in, rd_addr_in, rd_wen_in, wb_out,
   output wire [3:0] mux_ctl, alu_ctl;
   output wire [2:0] byt_typ;
   output wire [1:0] wb_ctl;
-  output wire jmp_ctl, rd_wen_out, bch_ctl, mem_ctl, stall_en, pc_en;
+  output wire jmp_ctl, rd_wen_out, bch_ctl, mem_ctl, stall_en, pc_en, halt;
 
   // Pipeline registers
   reg [word_width-1:0] inst;
@@ -77,7 +77,8 @@ module stage_ID (clk, inst_in, pc_addr_in, rd_addr_in, rd_wen_in, wb_out,
   stallingUnit id_su(
     .opc(opc),
     .stall_en(stall_en),
-    .pc_en(pc_en)
+    .pc_en(pc_en),
+    .halt(halt)
   );
 
 endmodule

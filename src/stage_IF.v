@@ -14,7 +14,7 @@ module stage_IF (clk, jmp_bch_en, jmp_bch_tgt, pc_en, stall_en, inst, pc_addr);
   wire [word_width-1:0] imem_out;
 
   // NOP Instruction (ADDI x0, x0, 0)
-  reg NOP_inst = 32'b000000000000_00000_000_00000_0010011;
+  localparam NOP_inst = 32'b000000000000_00000_000_00000_0010011;
 
   programCounter if_pc (
     .clk(clk),

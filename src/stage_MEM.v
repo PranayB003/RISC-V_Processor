@@ -1,15 +1,15 @@
 `include "constants.vh"
 
-module stage_MEM (clk, tgt_addr_in, rs2_val_in, rslt_in, jmp_ctl_in, rd_wen_in,
+module stage_MEM (clk, halt, tgt_addr_in, rs2_val_in, rslt_in, jmp_ctl_in, rd_wen_in,
                   wb_ctl_in, bch_ctl_in, mem_ctl_in, byt_typ_in, rd_addr_in, imm_ext_in,
-                  jmp_bch_tgt, jmp_bch_en, rslt_out, rd_wen_out, wb_ctl_out,
+                  jmp_bch_tgt, jmp_bch_en, rslt_out, rd_wen_out, wb_ctl_out, final_data,
                   mem_d, rd_addr_out, imm_ext_out, mem_fwd_en, mem_rd, mem_fwd_val);
 
   parameter reg_addr_width = `REG_ADDR_WIDTH;
   parameter mem_addr_width = `MEM_ADDR_WIDTH;
   parameter word_width     = `WORD_WIDTH;
 
-  input wire clk, jmp_ctl_in, rd_wen_in, bch_ctl_in, mem_ctl_in;
+  input wire clk, halt, jmp_ctl_in, rd_wen_in, bch_ctl_in, mem_ctl_in;
   input wire [mem_addr_width-1:0] tgt_addr_in;
   input wire [word_width-1:0] rs2_val_in, rslt_in, imm_ext_in;
   input wire [reg_addr_width-1:0] rd_addr_in;
@@ -20,7 +20,7 @@ module stage_MEM (clk, tgt_addr_in, rs2_val_in, rslt_in, jmp_ctl_in, rd_wen_in,
   output reg [word_width-1:0] rslt_out, imm_ext_out, mem_fwd_val;
   output reg [reg_addr_width-1:0] rd_addr_out, mem_rd;
   output reg [1:0] wb_ctl_out;
-  output wire [word_width-1:0] mem_d;
+  output wire [word_width-1:0] mem_d, final_data;
 
   // Pipeline registers
   reg jmp_ctl, rd_wen, bch_ctl, mem_ctl;
@@ -65,7 +65,9 @@ module stage_MEM (clk, tgt_addr_in, rs2_val_in, rslt_in, jmp_ctl_in, rd_wen_in,
     .type(byt_typ), 
     .addr(rslt), 
     .wd(rs2_val), 
-    .rd(mem_d)
+    .halt(halt),
+    .rd(mem_d),
+    .fd(final_data)
   );
 
 endmodule

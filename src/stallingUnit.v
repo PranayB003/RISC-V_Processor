@@ -1,10 +1,11 @@
 `include "constants.vh"
 
-module stallingUnit (opc, stall_en, pc_en);
+module stallingUnit (opc, stall_en, pc_en, halt);
 
   input wire [6:0] opc;
   output reg stall_en, pc_en;
-  
+  output reg halt;
+
   reg nop_counter, pc_disable_counter;
 
   always @(*)
@@ -32,8 +33,16 @@ module stallingUnit (opc, stall_en, pc_en);
 
   always @(*)
   begin
-    stall_en = (nop_counter != 0);
-    pc_en    = (pc_disable_counter != 0);
+    stall_en = (nop_counter != 0)        ? 1'b1 : 1'b0;
+    pc_en    = (pc_disable_counter != 0) ? 1'b1 : 1'b0;
+  end
+
+  always @(*)
+  begin
+    if (opc == 0)
+      halt = 1;
+    else
+      halt = 0;
   end
 
 endmodule

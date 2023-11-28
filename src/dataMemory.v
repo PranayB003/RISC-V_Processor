@@ -1,16 +1,17 @@
 `include "constants.vh"
 
-module dataMemory (clk, wen, type, addr, wd, rd);
+module dataMemory (clk, wen, type, addr, wd, halt, rd, fd);
 
-  parameter addr_width = `MEM_ADDR_WIDTH;
-  parameter mem_size   = `DMEM_DEPTH;
-  parameter word_width = `WORD_WIDTH;
+  parameter addr_width    = `MEM_ADDR_WIDTH;
+  parameter mem_size      = `DMEM_DEPTH;
+  parameter word_width    = `WORD_WIDTH;
+  parameter final_op_addr = 4;
   
-  input wire clk, wen;
+  input wire clk, wen, halt;
   input wire [2:0] type;
   input wire [addr_width-1:0] addr;
   input wire [word_width-1:0] wd;
-  output reg [word_width-1:0] rd;
+  output reg [word_width-1:0] rd, fd;
 
   reg [word_width-1:0] memory [mem_size-1:0];
 
@@ -38,6 +39,15 @@ module dataMemory (clk, wen, type, addr, wd, rd);
       `FUNCT3_LBU : rd = { {24{1'b0}}, memory[addr][7:0] };
       default     : rd = 0;
     endcase
+  end
+
+  // final output
+  always @(*)
+  begin
+    if ((clk == 1'b0) && (halt == 1'b1))
+      fd = memory[final_op_addr];
+    else
+      fd = 32'b0;
   end
 
 endmodule
