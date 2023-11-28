@@ -1,12 +1,13 @@
 `include "constants.vh"
 
-module processorCore (clk_in, final_data);
+module processorCore (clk_in, halt, final_data);
 
   parameter reg_addr_width = `REG_ADDR_WIDTH;
   parameter mem_addr_width = `MEM_ADDR_WIDTH;
   parameter word_width     = `WORD_WIDTH;
 
   input wire clk_in;
+  output reg halt;
   output reg [word_width-1:0] final_data;
   
   // Internal wires
@@ -45,6 +46,7 @@ module processorCore (clk_in, final_data);
   always @(*)
   begin
     clk        = (clk_in && halt_id);
+    halt       = halt_id;
     final_data = final_data_mem;
   end
 

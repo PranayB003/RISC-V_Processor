@@ -18,7 +18,7 @@ module instMemory (addr, inst);
 
   initial
   begin
-    $readmemb("inst_mem.bin", memory);
+    $readmemb("inst_mem.bin", memory, 0, 55);
   end
 
 endmodule
