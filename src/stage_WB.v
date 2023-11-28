@@ -1,12 +1,12 @@
 `include "constants.vh"
 
-module stage_WB (clk, rslt_in, rd_wen_in, wb_ctl_in, mem_d_in, rd_addr_in, imm_ext_in,
+module stage_WB (clk, rst, rslt_in, rd_wen_in, wb_ctl_in, mem_d_in, rd_addr_in, imm_ext_in,
                  rd_addr_out, rd_wen_out, wb_out);
 
   parameter reg_addr_width = `REG_ADDR_WIDTH;
   parameter word_width     = `WORD_WIDTH;
 
-  input wire clk, rd_wen_in;
+  input wire clk, rst, rd_wen_in;
   input wire [word_width-1:0] rslt_in, mem_d_in, imm_ext_in;
   input wire [reg_addr_width-1:0] rd_addr_in;
   input wire [1:0] wb_ctl_in;
@@ -22,12 +22,24 @@ module stage_WB (clk, rslt_in, rd_wen_in, wb_ctl_in, mem_d_in, rd_addr_in, imm_e
 
   always @(posedge clk)
   begin
-    rd_wen  <= rd_wen_in;
-    rslt    <= rslt_in;
-    mem_d   <= mem_d_in;
-    imm_ext <= imm_ext_in;
-    rd_addr <= rd_addr_in;
-    wb_ctl  <= wb_ctl_in;
+    if (rst)
+    begin
+      rd_wen  <= 0;
+      rslt    <= 0;
+      mem_d   <= 0;
+      imm_ext <= 0;
+      rd_addr <= 0;
+      wb_ctl  <= 0;
+    end
+    else
+    begin
+      rd_wen  <= rd_wen_in;
+      rslt    <= rslt_in;
+      mem_d   <= mem_d_in;
+      imm_ext <= imm_ext_in;
+      rd_addr <= rd_addr_in;
+      wb_ctl  <= wb_ctl_in;
+    end
   end
 
   always @(*)

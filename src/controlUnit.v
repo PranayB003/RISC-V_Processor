@@ -1,9 +1,10 @@
 `include "constants.vh"
 
-module controlUnit (opc, funct3, funct7,
+module controlUnit (opc, funct3, funct7, rst,
                     mux_ctl, alu_ctl, jmp_ctl, bch_ctl, mem_ctl, rd_wen,
                     wb_ctl, byt_typ);
 
+  input wire rst;
   input wire [6:0] opc, funct7;
   input wire [2:0] funct3;
   output reg [3:0] mux_ctl, alu_ctl;
@@ -13,6 +14,7 @@ module controlUnit (opc, funct3, funct7,
 
   always @(*)
   begin
+    mux_ctl = 4'b0000; // default assignment
     case (opc)
       `OPCODE_RTYPE  : mux_ctl = 4'b0100; // R-type
       `OPCODE_ITYPE  : mux_ctl = 4'b0101; // I-type 
@@ -22,7 +24,6 @@ module controlUnit (opc, funct3, funct7,
       `OPCODE_LOAD   : mux_ctl = 4'b0101; // LOAD
       `OPCODE_STORE  : mux_ctl = 4'b0101; // STORE
       `OPCODE_BRANCH : mux_ctl = 4'b0100; // BRANCH
-      default        : mux_ctl = 4'b0000; // LUI
     endcase
   end
 
@@ -84,7 +85,10 @@ module controlUnit (opc, funct3, funct7,
   // mem_ctl = 1 for read, and 0 for write (data memory)
   always @(*)
   begin
-    mem_ctl = (opc == `OPCODE_STORE) ? 1'b1 : 1'b0;
+    if (rst)
+      mem_ctl = 1'b0;
+    else
+      mem_ctl = (opc == `OPCODE_STORE) ? 1'b1 : 1'b0;
   end
 
   always @(*)

@@ -1,12 +1,12 @@
 `include "constants.vh"
 
-module processorCore (clk_in, halt, final_data);
+module processorCore (clk_in, rst, halt, final_data);
 
   parameter reg_addr_width = `REG_ADDR_WIDTH;
   parameter mem_addr_width = `MEM_ADDR_WIDTH;
   parameter word_width     = `WORD_WIDTH;
 
-  input wire clk_in;
+  input wire clk_in, rst;
   output reg halt;
   output reg [word_width-1:0] final_data;
   
@@ -52,6 +52,7 @@ module processorCore (clk_in, halt, final_data);
 
   stage_IF s1 (
     .clk(clk), 
+    .rst(rst),
     .jmp_bch_en(jmp_bch_en_mem), 
     .jmp_bch_tgt(jmp_bch_tgt_mem), 
     .pc_en(pc_en_id), 
@@ -62,6 +63,7 @@ module processorCore (clk_in, halt, final_data);
 
   stage_ID s2 (
     .clk(clk), 
+    .rst(rst),
     .inst_in(inst_if), 
     .pc_addr_in(pc_addr_if), 
     .rd_addr_in(rd_addr_wb), 
@@ -89,6 +91,7 @@ module processorCore (clk_in, halt, final_data);
 
   stage_EX s3 (
     .clk(clk), 
+    .rst(rst),
     .rs1_in(rs1_id), 
     .rs2_in(rs2_id), 
     .rs1_val_in(rs1_val_id), 
@@ -125,6 +128,7 @@ module processorCore (clk_in, halt, final_data);
 
   stage_MEM s4 (
 		.clk(clk),
+    .rst(rst),
     .halt(halt_id),
 		.tgt_addr_in(tgt_addr_ex),
 		.rs2_val_in(rs2_val_ex),
@@ -153,6 +157,7 @@ module processorCore (clk_in, halt, final_data);
 
   stage_WB s5 (
 		.clk(clk),
+    .rst(rst),
 		.rslt_in(rslt_mem),
 		.rd_wen_in(rd_wen_mem),
 		.wb_ctl_in(wb_ctl_mem),

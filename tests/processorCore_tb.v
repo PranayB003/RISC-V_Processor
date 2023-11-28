@@ -1,11 +1,12 @@
 module processorCore_tb ();
 
-  reg clk;
+  reg clk, rst;
   wire halt;
   wire [31:0] result;
 
   processorCore rv32i (
     .clk_in(clk),
+    .rst(rst),
     .halt(halt),
     .final_data(result)
   );
@@ -13,13 +14,15 @@ module processorCore_tb ();
   initial
   begin
     clk = 0;
-    #999999  $display("time=%0t, halt=%d, result=%d", $time, halt, result);
-    #1000000 $finish;
+    rst = 1;
+    #100 rst = 0;
+    #9999  $display("time=%0t, halt=%d, result=%d", $time, halt, result);
+    #10000 $finish;
   end
 
   always
   begin
-    #5000 clk = ~clk;
+    #50 clk = ~clk;
   end
 
 endmodule

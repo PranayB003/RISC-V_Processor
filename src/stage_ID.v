@@ -1,6 +1,6 @@
 `include "constants.vh"
 
-module stage_ID (clk, inst_in, pc_addr_in, rd_addr_in, rd_wen_in, wb_out, 
+module stage_ID (clk, rst, inst_in, pc_addr_in, rd_addr_in, rd_wen_in, wb_out, 
                  rs1, rs2, rs1_val, rs2_val, rd_addr_out,
                  mux_ctl, alu_ctl, jmp_ctl, rd_wen_out, wb_ctl, bch_ctl, mem_ctl, byt_typ,
                  imm_ext, pc_addr_out, stall_en, pc_en, halt);
@@ -9,7 +9,7 @@ module stage_ID (clk, inst_in, pc_addr_in, rd_addr_in, rd_wen_in, wb_out,
   parameter ins_addr_width = `MEM_ADDR_WIDTH;
   parameter word_width     = `WORD_WIDTH;
 
-  input wire clk, rd_wen_in;
+  input wire clk, rst, rd_wen_in;
   input wire [word_width-1:0] inst_in, wb_out;
   input wire [ins_addr_width-1:0] pc_addr_in;
   input wire [reg_addr_width-1:0] rd_addr_in;
@@ -32,8 +32,16 @@ module stage_ID (clk, inst_in, pc_addr_in, rd_addr_in, rd_wen_in, wb_out,
 
   always @(posedge clk)
   begin
-    inst    <= inst_in;
-    pc_addr <= pc_addr_in;
+    if (rst)
+    begin
+      inst    <= 32'b000000000000_00000_000_00000_0010011;
+      pc_addr <= 0;
+    end
+    else
+    begin
+      inst    <= inst_in;
+      pc_addr <= pc_addr_in;
+    end
   end
 
   always @(*)
@@ -57,6 +65,7 @@ module stage_ID (clk, inst_in, pc_addr_in, rd_addr_in, rd_wen_in, wb_out,
 
   controlUnit id_cu(
     .opc(opc),
+    .rst(rst),
     .funct3(funct3),
     .funct7(funct7),
     .mux_ctl(mux_ctl), 
@@ -76,6 +85,7 @@ module stage_ID (clk, inst_in, pc_addr_in, rd_addr_in, rd_wen_in, wb_out,
 
   stallingUnit id_su(
     .opc(opc),
+    .rst(rst),
     .stall_en(stall_en),
     .pc_en(pc_en),
     .halt(halt)

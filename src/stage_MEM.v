@@ -1,6 +1,6 @@
 `include "constants.vh"
 
-module stage_MEM (clk, halt, tgt_addr_in, rs2_val_in, rslt_in, jmp_ctl_in, rd_wen_in,
+module stage_MEM (clk, rst, halt, tgt_addr_in, rs2_val_in, rslt_in, jmp_ctl_in, rd_wen_in,
                   wb_ctl_in, bch_ctl_in, mem_ctl_in, byt_typ_in, rd_addr_in, imm_ext_in,
                   jmp_bch_tgt, jmp_bch_en, rslt_out, rd_wen_out, wb_ctl_out, final_data,
                   mem_d, rd_addr_out, imm_ext_out, mem_fwd_en, mem_rd, mem_fwd_val);
@@ -9,7 +9,7 @@ module stage_MEM (clk, halt, tgt_addr_in, rs2_val_in, rslt_in, jmp_ctl_in, rd_we
   parameter mem_addr_width = `MEM_ADDR_WIDTH;
   parameter word_width     = `WORD_WIDTH;
 
-  input wire clk, halt, jmp_ctl_in, rd_wen_in, bch_ctl_in, mem_ctl_in;
+  input wire clk, rst, halt, jmp_ctl_in, rd_wen_in, bch_ctl_in, mem_ctl_in;
   input wire [mem_addr_width-1:0] tgt_addr_in;
   input wire [word_width-1:0] rs2_val_in, rslt_in, imm_ext_in;
   input wire [reg_addr_width-1:0] rd_addr_in;
@@ -32,17 +32,34 @@ module stage_MEM (clk, halt, tgt_addr_in, rs2_val_in, rslt_in, jmp_ctl_in, rd_we
   
   always @(posedge clk)
   begin
-    jmp_ctl   <= jmp_ctl_in;
-    rd_wen    <= rd_wen_in;
-    bch_ctl   <= bch_ctl_in;
-    mem_ctl   <= mem_ctl_in;
-    tgt_addr  <= tgt_addr_in;
-    rs2_val   <= rs2_val_in;
-    rslt      <= rslt_in;
-    imm_ext   <= imm_ext_in;
-    rd_addr   <= rd_addr_in;
-    wb_ctl    <= wb_ctl_in;
-    byt_typ   <= byt_typ_in;
+    if (rst)
+    begin
+      jmp_ctl   <= 0;
+      rd_wen    <= 0;
+      bch_ctl   <= 0;
+      mem_ctl   <= 0;
+      tgt_addr  <= 0;
+      rs2_val   <= 0;
+      rslt      <= 0;
+      imm_ext   <= 0;
+      rd_addr   <= 0;
+      wb_ctl    <= 0;
+      byt_typ   <= 0;
+    end
+    else
+    begin
+      jmp_ctl   <= jmp_ctl_in;
+      rd_wen    <= rd_wen_in;
+      bch_ctl   <= bch_ctl_in;
+      mem_ctl   <= mem_ctl_in;
+      tgt_addr  <= tgt_addr_in;
+      rs2_val   <= rs2_val_in;
+      rslt      <= rslt_in;
+      imm_ext   <= imm_ext_in;
+      rd_addr   <= rd_addr_in;
+      wb_ctl    <= wb_ctl_in;
+      byt_typ   <= byt_typ_in;
+    end
   end
 
   always @(*)

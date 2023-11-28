@@ -1,6 +1,6 @@
 `include "constants.vh"
 
-module stage_EX (clk, rs1_in, rs2_in, rs1_val_in, rs2_val_in, rd_addr_in, 
+module stage_EX (clk, rst, rs1_in, rs2_in, rs1_val_in, rs2_val_in, rd_addr_in, 
                  pc_addr_in, imm_ext_in, mux_ctl_in, alu_ctl_in, jmp_ctl_in, 
                  rd_wen_in, wb_ctl_in, bch_ctl_in, mem_ctl_in, byt_typ_in, 
                  mem_wen_in, mem_rd_in, mem_d_in, wb_wen_in, wb_rd_in, wb_d_in,
@@ -11,7 +11,7 @@ module stage_EX (clk, rs1_in, rs2_in, rs1_val_in, rs2_val_in, rd_addr_in,
   parameter ins_addr_width = `MEM_ADDR_WIDTH;
   parameter word_width     = `WORD_WIDTH;
 
-  input wire clk, jmp_ctl_in, rd_wen_in, bch_ctl_in, mem_ctl_in, mem_wen_in, wb_wen_in;
+  input wire clk, rst, jmp_ctl_in, rd_wen_in, bch_ctl_in, mem_ctl_in, mem_wen_in, wb_wen_in;
   input wire [reg_addr_width-1:0] rs1_in, rs2_in, rd_addr_in, mem_rd_in, wb_rd_in;
   input wire [word_width-1:0] rs1_val_in, rs2_val_in, imm_ext_in, mem_d_in, wb_d_in;
   input wire [ins_addr_width-1:0] pc_addr_in;
@@ -41,21 +41,42 @@ module stage_EX (clk, rs1_in, rs2_in, rs1_val_in, rs2_val_in, rd_addr_in,
 
   always @(posedge clk)
   begin
-    jmp_ctl <= jmp_ctl_in;
-    rd_wen  <= rd_wen_in;
-    bch_ctl <= bch_ctl_in;
-    mem_ctl <= mem_ctl_in;
-    rs1     <= rs1_in;
-    rs2     <= rs2_in;
-    rd_addr <= rd_addr_in;
-    rs1_val <= rs1_val_in;
-    rs2_val <= rs2_val_in;
-    imm_ext <= imm_ext_in;
-    pc_addr <= pc_addr_in;
-    mux_ctl <= mux_ctl_in;
-    alu_ctl <= alu_ctl_in;
-    byt_typ <= byt_typ_in;
-    wb_ctl  <= wb_ctl_in;
+    if (rst)
+    begin
+      jmp_ctl <= 0;
+      rd_wen  <= 0;
+      bch_ctl <= 0;
+      mem_ctl <= 0;
+      rs1     <= 0;
+      rs2     <= 0;
+      rd_addr <= 0;
+      rs1_val <= 0;
+      rs2_val <= 0;
+      imm_ext <= 0;
+      pc_addr <= 0;
+      mux_ctl <= 0;
+      alu_ctl <= 0;
+      byt_typ <= 0;
+      wb_ctl  <= 0;
+    end
+    else
+    begin
+      jmp_ctl <= jmp_ctl_in;
+      rd_wen  <= rd_wen_in;
+      bch_ctl <= bch_ctl_in;
+      mem_ctl <= mem_ctl_in;
+      rs1     <= rs1_in;
+      rs2     <= rs2_in;
+      rd_addr <= rd_addr_in;
+      rs1_val <= rs1_val_in;
+      rs2_val <= rs2_val_in;
+      imm_ext <= imm_ext_in;
+      pc_addr <= pc_addr_in;
+      mux_ctl <= mux_ctl_in;
+      alu_ctl <= alu_ctl_in;
+      byt_typ <= byt_typ_in;
+      wb_ctl  <= wb_ctl_in;
+    end
   end
 
   always @(*)
